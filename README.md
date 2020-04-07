@@ -1,6 +1,10 @@
 # W2MHS - Wisconsin White Matter Hyperintensities Segmentation Toolbox
 #### Wisconsin Alzheimer’s Disease Research Center, UW-Madison
 
+## Reference
+Please cite the following paper upon usage of this toolbox.  
+Ithapu, V., Singh, V., Lindner, C., Austin, B. P., Hinrichs, C., Carlsson, C. M., Bendlin, B. B. and Johnson, S. C. (2014). Extracting and summarizing white matter hyperintensities using supervised segmentation methods in Alzheimer's disease risk and aging studies. *Human Brain Mapping, 35*(8), 4219-4235. https://doi.org/10.1002/hbm.22472.
+
 ## About
 W2MHS is an open source toolbox designed for detecting and quantifying White Matter Hyperintensities (WMH) in Alzheimer’s and aging-related neurological disorders. WMHs arise as bright regions on T2- weighted FLAIR images. They reflect comorbid neural injury or cerebral vascular disease burden. Their precise detection is of interest in Alzheimer’s disease (AD) with regard to its prognosis. Our toolbox provides a self-sufficient set of tools for segmenting these WMHs reliably and further quantifying their burden for down-processing studies. This documentation provides the background on the algorithm and parameters that comprise W2MHS along with the syntax.
 
@@ -51,7 +55,7 @@ See the ```Ouptuts``` tab or ```names.xls``` for the description of all output f
 - **Run**: The subject will be processed in sequence. Each subject undergoes four modules: preprocessing, segmentation, quantification, and visualization.
 
 ### Modules
-- **Preprocessing**: SPM coregisters the T2 image to the T1 image and segments WM, GM, and CSF PVEs. Then a ventricular template is created using geometrical methods and dilated by ```Periventricular Region Width```.
+- **Preprocessing**: SPM coregisters the T2 image to the T1 image and segments WM, GM, and CSF PVEs. Then a ventricular template is created using geometrical methods and dilated by ```Periventricular Region Width```.  
 - **Classification**: Voxels are grouped into batches of ```Classification Batch Size``` and convolved with 16 kernels. A neural network pre-trained on human-labeled data predicts WMH probability of each voxel from the convolutions. *TODO: discard the kernels and train a 3D MASK RCNN directly from the labeled images.*
 - **Quantification**: The estimated volume of WM (EV), deep WM (dEV), and periventricular WM (pEV) are calculated based on the predicted probability map and the total intracranial volume (ICV) of the subject. The predictions within ```Gray Matter Cleaning Distance``` and below ```Probability Map Cutoff``` are excluded. There are two ways of categorizing dEV and pEV:
 	- The hard way (cut): all WMH voxels within the dilated ventricular template is considered periventricular.
@@ -68,3 +72,7 @@ The NIfTI images saved by [Tools for NIfTI and ANALYZE image](https://www.mathwo
 - **Set as Default**: Save current settings on the ```Main```, ```Options```, and ```Outputs``` to be the default settings when W2MHS reopens. Default settings are saved to ```default.mat``` under the W2MHS directory.
 - **Reset to Default**: Load default settings.
 - **Save Before Exit**: Click to check or uncheck. If checked, the settings right before W2MHS closes will be set as the default settings and thus be recoverable.  
+
+### Additional Comments
+- Please visually verify the quality of WMH classification before running a batch of files.  
+- PVE segmentation during preprocessing is the most time consuming step, but its output can be reused when processing the same subject under different hyperparameters, enabling efficient tuning.
